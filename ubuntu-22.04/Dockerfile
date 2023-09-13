@@ -24,11 +24,9 @@ RUN curl "$JETTY_URL" | tar xz
 
 COPY jetty.sh $JETTY_HOME/bin/jetty.sh
 
+# Setup Jetty Base
 RUN set -xe ;\
     mkdir ${JETTY_BASE} ;\
     cd ${JETTY_BASE} ;\
-    java -jar ${JETTY_HOME}/start.jar --add-to-startd=http ;\
-    cp ${JETTY_HOME}/bin/jetty.sh /etc/init.d/jetty ;\
-    echo JETTY_HOME=${JETTY_HOME} > /etc/default/jetty ;\
-    echo JETTY_BASE=${JETTY_BASE} >> /etc/default/jetty
+    java -jar ${JETTY_HOME}/start.jar --add-to-startd=http
 

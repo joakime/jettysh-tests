@@ -24,6 +24,7 @@ RUN pwd ;\
 
 COPY jetty.sh $JETTY_HOME/bin/jetty.sh
 
+# Setup Jetty Base
 RUN set -xe ;\
     mkdir ${JETTY_BASE} ;\
     cd ${JETTY_BASE} ;\
