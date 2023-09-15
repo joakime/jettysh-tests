@@ -130,6 +130,7 @@ running()
   return 1
 }
 
+# Test state file (after timeout) for started state
 started()
 {
   STATEFILE=$1
