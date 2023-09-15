@@ -1,3 +1,6 @@
 #!/bin/env bash
-# cp /home/joakim/code/jetty/jetty.project-10.0.x/jetty-home/src/main/resources/bin/jetty.sh jetty.sh
+if [ -d ${JETTY_HOME_SRC} ] ; then
+    echo "Copying jetty.sh from ${JETTY_HOME_SRC}"
+    cp ${JETTY_HOME_SRC}/src/main/resources/bin/jetty.sh jetty.sh
+fi
 docker build -t jetty-shtest:fedora .
