@@ -27,8 +27,7 @@ COPY jetty.sh $JETTY_HOME/bin/jetty.sh
 
 # Setup jetty.sh defaults
 RUN echo "JETTY_HOME=${JETTY_HOME}" > /etc/default/jetty ;\
-    echo "JETTY_BASE=${JETTY_BASE}" >> /etc/default/jetty ;\
-    echo "JETTY_PID=${TEST_DIR}/jetty.pid" >> /etc/default/jetty
+    echo "JETTY_BASE=${JETTY_BASE}" >> /etc/default/jetty 
 
 # Setup Jetty User
 RUN yum install -y shadow-utils
