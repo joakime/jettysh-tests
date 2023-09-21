@@ -1,6 +1,9 @@
 #!/bin/env bash
-if [ -d ${JETTY_HOME_SRC} ] ; then
-    echo "Copying jetty.sh from ${JETTY_HOME_SRC}"
-    cp ${JETTY_HOME_SRC}/src/main/resources/bin/jetty.sh jetty.sh
-fi
-docker build -t jetty-shtest:amazon .
+source ../init.sh
+echo JETTY_VERSION=$JETTY_VERSION
+cd ..
+docker build \
+  --file=amazoncorretto/Dockerfile \
+  --build-arg="JETTY_VERSION=${JETTY_VERSION}" \
+  --tag=jetty-shtest:amazon .
+

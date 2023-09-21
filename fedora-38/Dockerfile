@@ -13,18 +13,17 @@ ARG TEST_DIR=/var/www/test
 ARG JAVA_HOME=$TEST_DIR/$JDK_VERSION
 
 ARG JETTY_VERSION=10.0.16
-ARG JETTY_DIST=jetty-home-${JETTY_VERSION}
-ARG JETTY_URL=https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/$JETTY_VERSION/$JETTY_DIST.tar.gz
-ARG JETTY_HOME=$TEST_DIR/$JETTY_DIST
+ARG JETTY_HOME=$TEST_DIR/jetty-home-$JETTY_VERSION
 ARG JETTY_BASE=$TEST_DIR/jetty-base
 
 USER root
 
+COPY jetty-home-archives/jetty-home-${JETTY_VERSION}.tar.gz ${TEST_DIR}/jetty-home-${JETTY_VERSION}.tar.gz
+COPY jetty-home-archives/jetty.sh $JETTY_HOME/bin/jetty.sh
+
 RUN mkdir -p ${TEST_DIR} ;\
     cd ${TEST_DIR} ;\
-    curl "$JETTY_URL" | tar xz
-
-COPY jetty.sh $JETTY_HOME/bin/jetty.sh
+    tar -zxf jetty-home-${JETTY_VERSION}.tar.gz
 
 # Setup jetty.sh defaults
 RUN echo "JETTY_HOME=${JETTY_HOME}" > /etc/default/jetty ;\
@@ -35,7 +34,7 @@ RUN mkdir -p ${JETTY_BASE} ;\
     chown jetty:jetty ${JETTY_BASE} ;\
     chmod a+w ${JETTY_BASE}
 
-user jetty
+USER jetty
 
 # Setup Jetty Base
 RUN set -xe ;\
