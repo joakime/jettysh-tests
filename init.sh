@@ -22,15 +22,12 @@ else
     done
 fi
 
-export JETTY_VERSION=10.0.17-SNAPSHOT
+# export JETTY_VERSION=10.0.17-SNAPSHOT
+export JETTY_VERSION=10.0.17-20230921.215746-22
+export JETTY_HOME_NAME=${JETTY_VERSION}
 export JETTY_URL=https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/$JETTY_VERSION/jetty-home-${JETTY_VERSION}.tar.gz
 export JETTY_HOME_TARBALL=${JETTY_HOME_ARCHIVES}/jetty-home-${JETTY_VERSION}.tar.gz
 # JETTY_HOME_SRC=/home/joakim/code/jetty/jetty.project-10.0.x/jetty-home
-
-if [ -d "${JETTY_HOME_SRC}" ] ; then
-    echo "Copying jetty.sh from ${JETTY_HOME_SRC}"
-    cp ${JETTY_HOME_SRC}/src/main/resources/bin/jetty.sh "$JETTY_HOME_ARCHIVES/jetty.sh"
-fi
 
 if expr "$JETTY_VERSION" : ".*-SNAPSHOT$" > /dev/null
 then
@@ -61,4 +58,25 @@ else
     fi
 fi
 
-echo "Using jetty-home-${JETTY_VERSION}.tar.gz"
+JETTYSHFILENAME=$(tar -ztf "$JETTY_HOME_TARBALL" | grep jetty.sh)
+JETTY_HOME_NAME=$(dirname $(dirname $JETTYSHFILENAME))
+
+if [ -d "${JETTY_HOME_SRC}" ] ; then
+    # Copy jetty.sh from SRC
+    echo "Copying jetty.sh from ${JETTY_HOME_SRC}"
+    cp -v ${JETTY_HOME_SRC}/src/main/resources/bin/jetty.sh "$JETTY_HOME_ARCHIVES/jetty.sh"
+else
+    # Extract from TARBALL
+    echo "Extracting ${JETTY_HOME_NAME}/bin/jetty.sh from $JETTY_HOME_TARBALL .."
+    tar -zxf "${JETTY_HOME_TARBALL}" "${JETTY_HOME_NAME}/bin/jetty.sh"
+    cp "${JETTY_HOME_NAME}/bin/jetty.sh" "$JETTY_HOME_ARCHIVES/jetty.sh"
+    if expr "${JETTY_HOME_NAME}" : "^jetty-home-[1-9]*.*" > /dev/null
+    then
+      rm -rf ${JETTY_HOME_NAME}
+    fi
+fi
+touch "${JETTY_HOME_ARCHIVES}/jetty.sh"
+
+echo "Jetty Version: $JETTY_VERSION"
+echo "Jetty Archive: $JETTY_HOME_TARBALL"
+echo "Jetty Home   : $JETTY_HOME_NAME"
